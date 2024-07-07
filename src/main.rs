@@ -1,7 +1,9 @@
 // use core::slice::SlicePattern;
-use std::io::{ErrorKind::NotFound, Read, Write};
+use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream};
 use std::str::from_utf8;
+
+use http::match_request;
 
 mod http;
 mod response;
@@ -18,41 +20,8 @@ fn handle_connection(mut stream: TcpStream) -> Result<(), ()> {
             print!("{}", from_utf8(&buffer).unwrap());
 
             let message: &str = from_utf8(&buffer[0..size]).unwrap();
-            let lines: Vec<&str> = message.split("\r\n").collect();
 
-            
-
-            let response = match lines[0].split(" ").collect::<Vec<&str>>().as_slice() {
-                ["GET", path, "HTTP/1.1"] => match http::handle_get(path) {
-                    Ok(data) => data,
-                    Err(err) => match err.kind() {
-                        NotFound => response::not_found(None),
-                        _ => response::server_error(None),
-                    },
-                },
-                ["DELETE", path, "HTTP/1.1"] => match http::handle_delete(path) {
-                    Ok(data) => data,
-                    Err(err) => match err.kind() {
-                        NotFound => response::not_found(None),
-                        _ => response::server_error(None)
-                    }
-                },
-                // ["POST", path, "HTTP/1.1"] => match http::handle_post(path) {
-                //     Ok(data) => data,
-                //     Err(err) => match err.kind() {
-                //         NotFound => response::not_found(None),
-                //         _ => response::server_error(None),
-                //     },
-                // },
-                // ["PUT", path, "HTTP/1.1"] => match http::handle_put(path) {
-                //     Ok(data) => data,
-                //     Err(err) => match err.kind() {
-                //         NotFound => response::not_found(None),
-                //         _ => response::server_error(None)
-                //     }
-                // },
-                _ => response::server_error(None),
-            };
+            let response = match_request(message);
 
             stream.write_all(response.as_bytes()).unwrap();
         }
