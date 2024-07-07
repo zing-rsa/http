@@ -1,12 +1,11 @@
-// use core::slice::SlicePattern;
-use std::io::{Read, Write};
+mod response;
+mod http;
+
 use std::net::{TcpListener, TcpStream};
+use std::io::{Read, Write};
 use std::str::from_utf8;
 
 use http::match_request;
-
-mod http;
-mod response;
 
 fn handle_connection(mut stream: TcpStream) -> Result<(), ()> {
     println!("new connection!");
