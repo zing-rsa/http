@@ -1,8 +1,8 @@
-mod response;
 mod http;
+mod response;
 
-use std::net::{TcpListener, TcpStream};
 use std::io::{Read, Write};
+use std::net::{TcpListener, TcpStream};
 use std::str::from_utf8;
 
 use http::match_request;
@@ -16,7 +16,7 @@ fn handle_connection(mut stream: TcpStream) -> Result<(), ()> {
         Ok(0) => println!("End of stream!"), // end of stream
         Ok(size) => {
             println!("Got message of size: {}", size);
-            print!("{}", from_utf8(&buffer).unwrap());
+            print!("{}\n", from_utf8(&buffer).unwrap());
 
             let message: &str = from_utf8(&buffer[0..size]).unwrap();
 
