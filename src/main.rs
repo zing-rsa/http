@@ -13,7 +13,7 @@ fn handle_connection(mut stream: TcpStream) -> Result<(), ()> {
     let mut buffer = [0 as u8; 4096];
 
     match stream.read(&mut buffer) {
-        Ok(0) => println!("End of stream!"), // end of stream
+        Ok(0) => println!("End of stream!"), // end of stream if size 0
         Ok(size) => {
             println!("Got message of size: {}", size);
             print!("{}\n", from_utf8(&buffer).unwrap());
@@ -24,9 +24,7 @@ fn handle_connection(mut stream: TcpStream) -> Result<(), ()> {
 
             stream.write_all(response.as_bytes()).unwrap();
         }
-        Err(_) => {
-            println!("{}", "Error!");
-        }
+        Err(err) => panic!("Error! {err}")
     }
 
     Ok(())
@@ -41,7 +39,7 @@ fn main() -> std::io::Result<()> {
             Ok(stream) => {
                 handle_connection(stream).unwrap();
             }
-            Err(_) => {}
+            Err(err) => panic!("Error! {err}")
         }
     }
 
