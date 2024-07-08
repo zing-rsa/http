@@ -10,5 +10,7 @@ https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages
 from root: `cargo run`
 
 ## usage:
-- `GET: localhost:8080/example.txt` should return the example data inside `resources/example.txt`
-- `POST: localhost:8080/myfile.txt` should create a file called myfile
+- `GET: localhost:8080/example.txt` -> return the example data inside `resources/example.txt`
+- `POST: localhost:8080/myfile.txt` -> create a file (supply data)
+- `PUT: localhost:8080/myfile.txt` -> update a file (supply data)
+- `DELETE: localhost:8080/myfile.txt` -> delete a file
